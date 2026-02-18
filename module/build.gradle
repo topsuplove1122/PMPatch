@@ -2,7 +2,7 @@ import com.v7878.zygisk.gradle.ZygoteLoader
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.java.zygisk)
+    id 'com.github.vova7878.ZygoteLoader' version 'master-SNAPSHOT'
 }
 
 def updateJsonBase = "https://raw.githubusercontent.com/vova7878-modules/PMPatch/main/updates/"
@@ -133,7 +133,7 @@ zygisk {
 dependencies {
     implementation libs.androidvmtools
     implementation libs.r8.annotations
-    implementation 'com.github.vova7878:DexFile:master-SNAPSHOT'
+    implementation 'com.github.vova7878:DexFile:v1.2.2'
 }
 
 configurations.all {
