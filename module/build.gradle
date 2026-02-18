@@ -1,9 +1,23 @@
 import com.v7878.zygisk.gradle.ZygoteLoader
 
+buildscript {
+    repositories {
+        maven { url 'https://jitpack.io' }
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        // 直接引入 Jar 包，繞過 Plugin Marker 檢查
+        // 使用 master-SNAPSHOT (因為這是 GitHub 預設分支)
+        classpath 'com.github.vova7878:ZygoteLoader:master-SNAPSHOT'
+    }
+}
+
 plugins {
     alias(libs.plugins.android.application)
-    id 'com.github.vova7878.ZygoteLoader' version 'master-SNAPSHOT'
 }
+
+apply plugin: 'com.github.vova7878.ZygoteLoader'
 
 def updateJsonBase = "https://raw.githubusercontent.com/vova7878-modules/PMPatch/main/updates/"
 
