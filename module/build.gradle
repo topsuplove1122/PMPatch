@@ -138,10 +138,14 @@ dependencies {
 
 configurations.all {
     resolutionStrategy {
-        // 無論誰要求 v1.0.3，都強制換成 master-SNAPSHOT
-        force 'com.github.vova7878:DexFile:5701a08'
+        // 嘗試 1: 使用 main-SNAPSHOT (針對 main 分支)
+        force 'com.github.vova7878:DexFile:main-SNAPSHOT'
         
-        // 為了保險起見，也可以設定 cache 動態版本
+        // 如果上面失敗，您可以註解掉上面那行，改用下面這行試試看 (針對 master 分支)
+        // force 'com.github.vova7878:DexFile:master-SNAPSHOT'
+        
+        // 設定快取失效時間為 0，確保每次都去抓最新的
         cacheDynamicVersionsFor 0, 'seconds'
+        cacheChangingModulesFor 0, 'seconds'
     }
 }
