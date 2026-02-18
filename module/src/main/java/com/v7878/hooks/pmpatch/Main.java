@@ -9,11 +9,13 @@ import com.v7878.r8.annotations.DoNotObfuscateType;
 import com.v7878.r8.annotations.DoNotShrink;
 import com.v7878.r8.annotations.DoNotShrinkType;
 import com.v7878.zygisk.ZygoteLoader;
+import com.v7878.hooks.pmpatch.hooks.LocationHook;
+
 
 @DoNotShrinkType
 @DoNotObfuscateType
 public class Main {
-    public static String TAG = "PM_PATCH";
+    public static String TAG = "LOCATION_MOCK_HIDE";
 
     @SuppressWarnings("unused")
     @DoNotShrink
@@ -26,15 +28,21 @@ public class Main {
     @DoNotShrink
     @DoNotObfuscate
     public static void main() {
-        Log.i(TAG, "Injected into " + ZygoteLoader.getPackageName());
+        String packageName = ZygoteLoader.getPackageName();
+        Log.i(TAG, "Injected into " + packageName);
         try {
             EntryPoint.mainCommon();
-            if (BuildConfig.RUN_FOR_SYSTEM_SERVER &&
-                    PACKAGE_SYSTEM_SERVER.equals(ZygoteLoader.getPackageName())) {
-                SystemServerInit.init();
+            if (PACKAGE_SYSTEM_SERVER.equals(packageName)) {
+                Log.i(TAG, "Initializing System Server Hooks...");
+                // 這裡原本是 SystemServerInit.init();
+                // 改成你的 Hook
+                LocationHook.initSystemServer(); 
             }
-            if (BuildConfig.RUN_FOR_APPLICATIONS) {
-                ApplicationInit.init();
+            else { 
+                Log.i(TAG, "Initializing App Hooks for: " + packageName);
+                // 這裡原本是 ApplicationInit.init();
+                // 改成你的 Hook
+                LocationHook.initAppHooks();
             }
         } catch (Throwable th) {
             Log.e(TAG, "Exception", th);
