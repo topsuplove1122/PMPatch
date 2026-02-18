@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 // 假設 PMPatch 專案裡有這個工具類，請根據實際情況替換
-import com.v7878.hooks.pmpatch.utils.HookUtils; 
+import com.v7878.hooks.pmpatch.utils.java; 
 
 public class LocationHook {
     private static final String TAG = "LocationHook";
