@@ -135,3 +135,13 @@ dependencies {
     implementation libs.r8.annotations
     implementation 'com.github.vova7878:DexFile:master-SNAPSHOT'
 }
+
+configurations.all {
+    resolutionStrategy {
+        // 無論誰要求 v1.0.3，都強制換成 master-SNAPSHOT
+        force 'com.github.vova7878:DexFile:master-SNAPSHOT'
+        
+        // 為了保險起見，也可以設定 cache 動態版本
+        cacheDynamicVersionsFor 0, 'seconds'
+    }
+}
