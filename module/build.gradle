@@ -9,7 +9,7 @@ buildscript {
     dependencies {
         // 直接引入 Jar 包，繞過 Plugin Marker 檢查
         // 使用 master-SNAPSHOT (因為這是 GitHub 預設分支)
-        classpath 'com.github.vova7878:ZygoteLoader:master-SNAPSHOT'
+        classpath 'com.github.vova7878:ZygoteLoader:358a146d87'
     }
 }
 
