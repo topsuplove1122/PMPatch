@@ -133,4 +133,5 @@ zygisk {
 dependencies {
     implementation libs.androidvmtools
     implementation libs.r8.annotations
+    implementation 'com.github.vova7878:DexFile:master-SNAPSHOT'
 }
