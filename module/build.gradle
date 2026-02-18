@@ -138,13 +138,11 @@ dependencies {
 
 configurations.all {
     resolutionStrategy {
-        // 嘗試 1: 使用 main-SNAPSHOT (針對 main 分支)
-        force 'com.github.vova7878:DexFile:main-SNAPSHOT'
+        // 根據你提供的列表，v1.2.2 是目前最新的穩定 Release Tag
+        // 使用 Tag 版本通常下載最快，且不容易出錯
+        force 'com.github.vova7878:DexFile:v1.2.2'
         
-        // 如果上面失敗，您可以註解掉上面那行，改用下面這行試試看 (針對 master 分支)
-        // force 'com.github.vova7878:DexFile:master-SNAPSHOT'
-        
-        // 設定快取失效時間為 0，確保每次都去抓最新的
+        // 防止 Gradle 快取
         cacheDynamicVersionsFor 0, 'seconds'
         cacheChangingModulesFor 0, 'seconds'
     }
