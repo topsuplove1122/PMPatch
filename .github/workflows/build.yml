@@ -1,0 +1,74 @@
+name: Build Magisk Module
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch: # 允許手動點擊按鈕觸發
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive # 重要：Zygisk 專案通常包含 submodules，必須遞歸下載
+        fetch-depth: 0
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Setup Android NDK
+      uses: android-actions/setup-android@v3
+      # GitHub Runner 其實自帶 NDK，但這個步驟確保環境變數正確
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: Build with Gradle
+      id: buildStep
+      run: |
+        # 嘗試編譯 Release 版本
+        # 如果你的專案沒有配置 Release Keystore，這裡可能會失敗
+        # 如果失敗，請改用 assembleDebug
+        ./gradlew assembleRelease --stacktrace
+      continue-on-error: false
+
+    - name: Locate Output Zip
+      id: locate_artifact
+      run: |
+        echo "Searching for generated zip files..."
+        # PMPatch 的輸出通常在 module/build/outputs/magisk/ 或者 build/distributions/ 下
+        # 這裡我們使用 find 命令來找任何新生成的 zip
+        # 排除 buildSrc 下的 zip
+        zip_path=$(find . -name "*.zip" | grep -v "buildSrc" | grep "release" | head -n 1)
+        
+        if [ -z "$zip_path" ]; then
+            echo "Release zip not found, trying Debug zip..."
+            zip_path=$(find . -name "*.zip" | grep -v "buildSrc" | grep "debug" | head -n 1)
+        fi
+
+        if [ -z "$zip_path" ]; then
+            echo "Error: No zip file found!"
+            exit 1
+        fi
+
+        echo "Found zip at: $zip_path"
+        echo "ZIP_PATH=$zip_path" >> $GITHUB_ENV
+        
+        # 提取檔案名稱
+        file_name=$(basename "$zip_path")
+        echo "ZIP_NAME=$file_name" >> $GITHUB_ENV
+
+    - name: Upload Magisk Module
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.ZIP_NAME }}
+        path: ${{ env.ZIP_PATH }}
+        if-no-files-found: error
