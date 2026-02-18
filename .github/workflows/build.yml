@@ -34,10 +34,10 @@ jobs:
     - name: Build with Gradle
       id: buildStep
       run: |
-        # 嘗試編譯 Release 版本
-        # 如果你的專案沒有配置 Release Keystore，這裡可能會失敗
-        # 如果失敗，請改用 assembleDebug
-        ./gradlew assembleRelease --stacktrace
+        # 加入 -Dhttp.socketTimeout=300000 (300秒/5分鐘) 來防止 JitPack 下載逾時
+        ./gradlew assembleRelease --stacktrace \
+          -Dhttp.socketTimeout=300000 \
+          -Dhttp.connectionTimeout=300000
       continue-on-error: false
 
     - name: Locate Output Zip
